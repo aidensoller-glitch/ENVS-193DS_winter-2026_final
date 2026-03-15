@@ -1,7 +1,96 @@
 ---
 title: "ENVS-193DS_homework-03"
+author: "Aiden Soller"
 format: html
 editor: visual
+toc: true # use this to display a table of contents
+execute:
+  message: false # use this to make sure messages don't show up
+  warning: false # use this to make sure warnings don't show up
 ---
+
+[GitHub repository](https://github.com/aidensoller-glitch/ENVS-193DS_winter-2026_final.git)
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+
+library(janitor)
+
+library(gt)
+
+library(car)
+
+library(rstatix)
+
+library(dplyr)
+
+library(here)
+
+kelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
+
+```
+
+# Problem 1. Research writing
+
+# a. Transparent statistical methods
+
+In part 1, they used linear regression. We know this because the analysis examined whether a continuous variable (precipitation) can be used to predict another continuous variable (the extent of flooded wetland area).
+
+In part 2, they used a Kruskal–Wallis test. This test evaluates whether the median flooded wetland area differs among several groups, in this case the five water year classifications (wet, above normal, below normal, dry, and critical drought) to determine if at least one group’s median is significantly different from the others.
+
+# b. Figure needed
+
+A boxplot would be an appropriate figure to accompany the test in part 2 because it visually compares distributions and medians across multiple groups, which matches the goal of the Kruskal–Wallis test. On the x-axis I would have the 5 different water year classifications, while on the y-axis I would show the wetland flooding area. Each category on the x-axis would have its own boxplot representing the distribution of flooded wetland area values for that water year type. In each boxplot, there would be a horizontal line inside the box that represents the median flooded wetland area. The box shows the interquartile range, while whiskers would extend to the rest of the non-outlier data. This figure would help readers visually compare the medians and variability of flooded wetland area across the five water year classifications, providing clearer context for the statistical test.
+
+# c. Suggestions for rewriting
+
+Part 1: Flooded wetland area in the San Joaquin River Delta did not show evidence of being predicted by precipitation. This suggests that differences in yearly precipitation were not linked to measurable changes in the extent of flooded wetlands in this dataset. (Linear regression, F(df) = [test statistic], p = 0.11, α = significance level).   
+
+Part 2: Flooded wetland area did not appear to differ across water year classifications, indicating that the median flooded wetland area was similar among the five water year categories in this analysis. (Kruskal–Wallis test: H = [test statistic], p = 0.12, α = significance level).
+
+# d. Interpretation
+
+One additional variable that could influence flooded wetland area is river discharge (water flow) entering the delta. River discharge is a continuous variable, and higher flow rates could increase the amount of water entering wetlands, potentially expanding the total flooded area.
+
+# Problem 2. Data visualization
+
+# a. Cleaning and summarizing
+
+```{r}
+kelp_clean <- kelp |> # store the kelp data in kelp_clean 
+  clean_names() |> # clean column names
+  
+  filter(site %in% c("IVEE", "NAPL", "CARP")) |> # Include observations from Isla Vista, Naples, and Carpinteria
+  
+  filter(!(date == "2000-09-22" & transect == "6" & quad == "40")) |> # removes observation
+  
+  mutate(site_name = case_when( # Create descriptive site_name based on site codes
+  site == "NAPL" ~ "Naples", # change site name from NAPL to Naples
+  site == "IVEE" ~ "Isla Vista", # change site name from IVEE to Isla Vista
+  site == "CARP" ~ "Carpinteria" # change site name from CARP to Carpinteria
+)) |> 
+  
+mutate(site_name = as_factor(site_name), # converts site_name to a factor
+       site_name = fct_relevel(site_name, # custom order for factor levels
+                               "Naples", "Isla Vista", "Carpinteria")) |>
+  
+  group_by(site_name, year) |> # Group by site_name and year for summarizing
+  
+  summarize(mean_fronds = mean(fronds)) |> # Calculate mean fronds per group
+  ungroup() # Ungroup to remove grouping, giving data frame
+
+kelp_clean |> slice_sample(n = 5) # slice 5 samples from the kelp_clean data frame 
+
+
+```
+```{r}
+str(kelp_clean) # Show the structure of dataset
+```
+
+# b. Understanding the data
+
+That observation was excluded because the fronds value for 2000-09-22 in transect 6, quad 40 is -99999, which is not an actual count but a code indicating missing or unrecorded data. The dataset documentation explains this in the Methods and Protocols tab on the data page, under the method's section.
 
 
