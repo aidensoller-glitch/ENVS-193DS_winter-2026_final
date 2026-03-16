@@ -28,6 +28,12 @@ library(dplyr)
 
 library(here)
 
+library(MuMIn)
+
+library(DHARMa)
+
+library(ggeffects)
+
 kelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
 
 mopl <- read_csv("../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv")
@@ -47,9 +53,9 @@ A boxplot would be an appropriate figure to accompany the test in part 2 because
 
 # c. Suggestions for rewriting
 
-Part 1: Flooded wetland area in the San Joaquin River Delta did not show evidence of being predicted by precipitation. This suggests that differences in yearly precipitation were not linked to measurable changes in the extent of flooded wetlands in this dataset. (Linear regression, F(df) = [test statistic], p = 0.11, α = significance level).   
+Part 1: Flooded wetland area in the San Joaquin River Delta did not show evidence of being predicted by precipitation. This suggests that differences in yearly precipitation were not linked to measurable changes in the extent of flooded wetlands in this dataset. (Linear regression, F(df) = \[test statistic\], p = 0.11, α = significance level).
 
-Part 2: Flooded wetland area did not appear to differ across water year classifications, indicating that the median flooded wetland area was similar among the five water year categories in this analysis. (Kruskal–Wallis test: H = [test statistic], p = 0.12, α = significance level).
+Part 2: Flooded wetland area did not appear to differ across water year classifications, indicating that the median flooded wetland area was similar among the five water year categories in this analysis. (Kruskal–Wallis test: H = \[test statistic\], p = 0.12, α = significance level).
 
 # d. Interpretation
 
@@ -86,6 +92,7 @@ kelp_clean |> slice_sample(n = 5) # slice 5 samples from the kelp_clean data fra
 
 
 ```
+
 ```{r}
 str(kelp_clean) # Show the structure of dataset
 ```
@@ -140,6 +147,7 @@ ggplot(kelp_clean, aes(x = year,
       linewidth = 0.4)
   )
 ```
+
 # d. Interpretation
 
 The site with the most variable mean kelp fronds per year is Isla Vista, as seen through its large fluctuations ranging from 4 to 40 mean kelp fronds per year. Additionally, Isla Vista's fluctuation's are more variable year over year than both Naples and Carpinteria with large increases and decreases in the mean kelp fronds as seen in years like 2006-2008 or 2022-2023.
@@ -160,13 +168,112 @@ Distance to prairie dog colony edge is a continuous variable because it represen
 
 # c. Table of models
 
-| Model number | Visual Obstruction | Distance to Prarie Dog Colony |      Model Description      |  
-|--------------|:------------------:|:-----------------------------:|:---------------------------:|  
-| 0            |          N         |              N                | no predictors (null model)  |
-| 1            |          Y         |              Y                | all predictors              |
-|              |                    |                               |  (saturated model)          | 
-| 2            |          N         |              Y                | Distance to colony edge only|   
-| 3            |          Y         |              N                |  Visual obstruction only    |
+| Model number | Visual Obstruction | Distance to Prarie Dog Colony | Model Description |
+|----------------|:--------------:|:-------------------:|:------------------:|
+| 0 | N | N | no predictors (null model) |
+| 1 | Y | Y | all predictors (saturated model) |
+| 2 | N | Y | Distance to colony edge only |
+| 3 | Y | N | Visual obstruction only |
 
 # d. Run the models
 
+```{r}
+mopl_clean <- mopl |>
+  clean_names() |> # clean column names
+  mutate(used_bin = case_when(id == "used" ~ 1, # mutate collumn "used" = 1, "available" = 0
+                              id == "available" ~ 0)) |>
+  select(used_bin, edgedist, vo_nest) # keep only needed columns
+
+m0 <- glm( # fit a generalized linear model
+  used_bin ~ 1, # null model (no predictors)
+  data = mopl_clean, # use mopl_clean data set
+  family = "binomial" # logistic regression for nest used (1) or not used (0)
+)
+
+m1 <- glm( # fit a generalized linear model
+  used_bin ~ vo_nest + edgedist, # saturated model (all predictors)
+  data = mopl_clean, # use mopl_clean data set
+  family = "binomial" # logistic regression for nest used (1) or not used (0)
+)
+
+m2 <- glm( # fit a generalized linear model
+  used_bin ~ edgedist, # Distance to colony edge predictor
+  data = mopl_clean, # use mopl_clean data set
+  family = "binomial" # logistic regression for nest used (1) or not used (0)
+)
+
+m3 <- glm( # fit a generalized linear model
+  used_bin ~ vo_nest, # Visual obstruction predictor
+  data = mopl_clean, # use mopl_clean data set
+  family = "binomial" # logistic regression for nest used (1) or not used (0)
+)
+
+```
+
+# e. Select the best model
+
+```{r}
+AICc(m0, m1, m2, m3) |> # calculate AICc values for all four models
+  arrange(AICc) # sort models from lowest (best) to highest AICc
+```
+
+The best model as determined by Akaike's Information Criterion (AIC) is the model which used visual obstruction as the only predictor variable to the probability of site usage by Mountain Plover nests.
+
+# f. Check the diagnostics
+
+```{r}
+sim_res_m3 <- simulateResiduals(fittedModel = m3) # # simulate residuals for the best model m3 and store as sim_res_m3 
+plot(sim_res_m3) # create plot of residuals
+```
+
+# g. Visualize the model predictions
+
+```{r}
+predict_data_m3 <- ggpredict(
+  m3,
+  terms = "vo_nest"
+)
+
+ggplot(data=mopl_clean, # use mopl_clean dataset
+       aes(x = vo_nest, # set vo_nest as x-axis
+           y = used_bin)) + # set used_bin as y-axis
+  geom_point( # plot observed points
+    color = "blue", # edit line color
+    alpha = 0.5 ) + # edit point transparency
+  
+  geom_ribbon(data = predict_data_m3, # add confidence interval
+              aes(x = x,
+                  y = predicted,
+                  ymin = conf.low,
+                  ymax = conf.high),
+              fill = "skyblue", # edit fill color
+  ) +
+  geom_line(data = predict_data_m3, # add prediction line
+           aes(x = x,
+               y = predicted),
+           color = "red" # edit line color
+  ) +
+  labs(
+    x = "Visual Obstruction (cm)", # x-axis label
+    y = "Probability of Mountain Plover nest site use (Yes = 1, No = 0)" # y-axis label
+  ) + 
+  theme_classic() # change theme to classic
+  
+```
+
+# h. Write a caption for your figure
+
+# Figure 1. Predicted probability of Mountain Plover nest site use in relation to visual obstruction.
+
+Blue points show observed nest site use (0 = unused, 1 = used) across levels of visual obstruction (cm). The red line represents predicted probabilities from the selected logistic regression model, and the light blue shaded ribbon indicates the 95% confidence interval around those predictions. Data collected by Duchardt, Courtney; Beck, Jeffrey; Augustine, David (2020). Data from: Mountain Plover habitat selection and nest survival in relation to weather variability and spatial attributes of Black-tailed Prairie Dog disturbance \[Dataset\]. Dryad.
+
+<https://doi.org/10.5061/dryad.ttdz08kt7>
+
+# i. Calculate model predictions
+```{r}
+ggpredict(m3, # use the selected logistic regression model
+          terms = "vo_nest [0]") # set visual obstruction value to 0
+```
+# j. Interpret your results
+
+Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sightlines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.
