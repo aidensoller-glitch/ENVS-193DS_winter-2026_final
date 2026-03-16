@@ -30,6 +30,7 @@ library(here)
 
 kelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
 
+mopl <- read_csv("../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv")
 ```
 
 # Problem 1. Research writing
@@ -147,8 +148,25 @@ The site with the least variable mean kelp fronds per year is Carpinteria, as se
 
 # Problem 3. Data analysis
 
+# a. Response variable
 
+In the data set 0s mean that a site within a prairie dog colony is unused and available, whereas a 1 means that a site is used as a Mountain plover nest site.
 
+# b. Purpose of study
 
+Visual obstruction is a continuous variable, as it represents a numeric value representing vegetation height and density using a Robel pole. As visual obstruction increases, the probability of Mountain Plover nest site use would likely decrease because the species prefers areas with short vegetation and more open ground that allow better visibility of predators such as the environment seen at prairie dog colonies. The discription of visual obstruction and the use of a Robel pole is found in the methods section, "Adult Mountain Plover Density – Data Collection,” third paragraph, whereas the justification of the decrease in probability of a nest is found in the discussion section, paragraph 4.
 
+Distance to prairie dog colony edge is a continuous variable because it represents a numeric distance from a nest site to a prairie dog colony. As the distance to prairie dog colony edge increase, the probability of Mountain Plover nest site use would decrease because prairie dog colonies provide the environment that Mountain Plovers prefer by shortening the vegation on areas with open ground. The information was found in the discussion section, paragraph 3.
+
+# c. Table of models
+
+| Model number | Visual Obstruction | Distance to Prarie Dog Colony |      Model Description      |  
+|--------------|:------------------:|:-----------------------------:|:---------------------------:|  
+| 0            |          N         |              N                | no predictors (null model)  |
+| 1            |          Y         |              Y                | all predictors              |
+|              |                    |                               |  (saturated model)          | 
+| 2            |          N         |              Y                | Distance to colony edge only|   
+| 3            |          Y         |              N                |  Visual obstruction only    |
+
+# d. Run the models
 
