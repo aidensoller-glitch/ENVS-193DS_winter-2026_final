@@ -91,6 +91,64 @@ str(kelp_clean) # Show the structure of dataset
 
 # b. Understanding the data
 
-That observation was excluded because the fronds value for 2000-09-22 in transect 6, quad 40 is -99999, which is not an actual count but a code indicating missing or unrecorded data. The dataset documentation explains this in the Methods and Protocols tab on the data page, under the method's section.
+That observation was excluded because the fronds value for 2000-09-22 in transect 6, quad 40 is -99999, which is not an actual count but a message indicating missing or unrecorded data. The data catalog explains this in the Methods and Protocols tab on the data page, under the method's section.
+
+# c. Visualize the data
+
+```{r}
+ggplot(kelp_clean, aes(x = year, 
+                       y = mean_fronds, 
+                       color = site_name)) +
+  
+  geom_line(size = 1) + # line geometry
+  geom_point(size = 2) + # point geometry
+  
+  scale_x_continuous(
+    breaks = c(2000, 2005, 2010, 2015, 2020, 2025),
+    minor_breaks = seq(2000, 2025, 2.5)
+  ) +
+  
+  scale_y_continuous(
+    breaks = c(0, 10, 20, 30, 40),
+    minor_breaks = seq(0, 40, 5)
+  ) +
+  
+  scale_color_manual(values = c(
+    "Naples" = "darkcyan",
+    "Isla Vista" = "goldenrod",
+    "Carpinteria" = "thistle"
+  )) +
+  
+  labs(
+    title = "Sites vary in mean kelp fronds per year",
+    x = "Year",
+    y = "Mean kelp fronds per year",
+    color = "Site"
+  ) +
+  
+  theme_minimal(base_family = "Monaco") +
+  
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    panel.border = element_blank(),
+    panel.grid.major = element_line(
+      color = "grey75",
+      linewidth = 0.6),
+    panel.grid.minor = element_line(
+      color = "grey80",
+      linewidth = 0.4)
+  )
+```
+# d. Interpretation
+
+The site with the most variable mean kelp fronds per year is Isla Vista, as seen through its large fluctuations ranging from 4 to 40 mean kelp fronds per year. Additionally, Isla Vista's fluctuation's are more variable year over year than both Naples and Carpinteria with large increases and decreases in the mean kelp fronds as seen in years like 2006-2008 or 2022-2023.
+
+The site with the least variable mean kelp fronds per year is Carpinteria, as seen through its comparitvely small fluctuations ranging only from 3-16 mean kelp fronds per year. While similiar, Naples ranges to 16 mean kelp fronds per year 3 times, whereas Carpinteria only ranges that high once.
+
+# Problem 3. Data analysis
+
+
+
+
 
 
