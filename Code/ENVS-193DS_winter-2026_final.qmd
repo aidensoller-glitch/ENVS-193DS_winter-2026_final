@@ -39,7 +39,8 @@ library(effsize)
 library(ggplot2)
 
 library(Hmisc)
-tekelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
+
+kelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
 
 mopl <- read_csv("../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv")
 
@@ -91,8 +92,7 @@ mutate(site_name = as_factor(site_name), # converts site_name to a factor
                                "Naples", "Isla Vista", "Carpinteria")) |>
   
   group_by(site_name, year) |> # Group by site_name and year for summarizing
-  
-  summarize(mean_fronds = mean(fronds)) |> # Calculate mean fronds per group
+  dplyr::summarize(mean_fronds = mean(fronds)) |> # Calculate mean fronds per group
   ungroup() # Ungroup to remove grouping, giving data frame
 
 kelp_clean |> slice_sample(n = 5) # slice 5 samples from the kelp_clean data frame 
@@ -229,7 +229,7 @@ The best model as determined by Akaike's Information Criterion (AIC) is the mode
 # f. Check the diagnostics
 
 ```{r}
-sim_res_m3 <- simulateResiduals(fittedModel = m3) # # simulate residuals for the best model m3 and store as sim_res_m3 
+sim_res_m3 <- simulateResiduals(fittedModel = m3) # simulate residuals for the best model "m3" and store as sim_res_m3 
 plot(sim_res_m3) # create plot of residuals
 ```
 
@@ -237,8 +237,8 @@ plot(sim_res_m3) # create plot of residuals
 
 ```{r}
 predict_data_m3 <- ggpredict(
-  m3,
-  terms = "vo_nest"
+  m3, # generate predicted values from model m3
+  terms = "vo_nest" # for the predictor variable vo_nest
 )
 
 ggplot(data=mopl_clean, # use mopl_clean dataset
@@ -249,10 +249,10 @@ ggplot(data=mopl_clean, # use mopl_clean dataset
     alpha = 0.5 ) + # edit point transparency
   
   geom_ribbon(data = predict_data_m3, # add confidence interval
-              aes(x = x,
-                  y = predicted,
-                  ymin = conf.low,
-                  ymax = conf.high),
+              aes(x = x, # set x to x-axis
+                  y = predicted, # set predicted values to y-axis
+                  ymin = conf.low, # set lower bound CI
+                  ymax = conf.high), # set upper bound CI
               fill = "skyblue", # edit fill color
   ) +
   geom_line(data = predict_data_m3, # add prediction line
@@ -310,8 +310,8 @@ Cleaning Data:
 
 ```{r}
 sleep_calendar_clean <- sleep_calendar |> 
-  clean_names() |> 
-  select(duration_hr_mm_ss, half_of_week)
+  clean_names() |> # clean column names to make them lower_case_with_underscores
+  select(duration_hr_mm_ss, half_of_week) # keep only two collumns
 
 ```
 
@@ -326,12 +326,12 @@ Assumptions:
 ggplot(data = sleep_calendar_clean |> 
          filter(half_of_week != 3) |>  # use sleep_calendar data frame but exclude the weekend
        mutate(duration_hr = as.numeric(duration_hr_mm_ss) / 3600), # convert seconds to hours
-       aes(sample = duration_hr, # use numeric hours for QQ plot
+       aes(sample = duration_hr, # use hours for QQ plot
            color = half_of_week)) + # color points by half_of_week
   geom_qq_line(color = "blue") + # add reference line in blue
-  geom_qq() + # add actual QQ plot points
-  facet_wrap(~ factor(half_of_week, 
-                      levels = c(1,2), 
+  geom_qq() + # add plot points
+  facet_wrap(~ factor(half_of_week, # convert half_of_week into a categorical factor
+                      levels = c(1,2), # define the order of the categories
                       labels = c("Mon/Tues", "Wed/Thurs"))) + # label panels as Mon/Tues and Wed/Thurs
   theme(legend.position = "none") # remove legend
 ```
@@ -342,7 +342,7 @@ ggplot(data = sleep_calendar_clean |>
 
 ```{r}
 var.test(duration_hr_mm_ss ~ half_of_week, # run variance test between first half and second half of the week
-         data = sleep_calendar_clean %>% filter(half_of_week != 3)) # exclude half 3
+         data = sleep_calendar_clean %>% filter(half_of_week != 3)) # exclude weekend
 ```
 
 Run analysis
@@ -350,16 +350,17 @@ Run analysis
 ```{r}
 t.test(as.numeric(duration_hr_mm_ss) ~ half_of_week,  # run a two-sample t-test
        data = sleep_calendar_clean %>% filter(half_of_week != 3), # exclude the weekend
-       var.equal = TRUE)  # assume equal variances based on F-test
+       var.equal = TRUE)  # assume equal variances
 ```
 Effect Size:
 
 ```{r}
 sleep_two_groups <- sleep_calendar_clean |>  
-  filter(half_of_week != 3) |> # keep only first half (1 = Mon/Tues) and second half (2 = Wed/Thurs)
-  mutate(duration_hr = as.numeric(duration_hr_mm_ss)/3600,  # convert hms object to numeric hours
-         half_of_week = factor(half_of_week, levels = c(1,2),  # convert grouping variable to factor
-                               labels = c("Mon/Tues", "Wed/Thurs")))  
+  filter(half_of_week != 3) |> # exclude the weekends
+  mutate(duration_hr = as.numeric(duration_hr_mm_ss)/3600, # convert sleep duration from seconds to hours
+         half_of_week = factor(half_of_week, # convert half_of_week into a categorical factor
+                               levels = c(1,2), # define the order of the categories
+                               labels = c("Mon/Tues", "Wed/Thurs"))) # add labels
 
 cohen.d(duration_hr ~ half_of_week, # compare average sleep duration between the two half-of-week groups
         data = sleep_two_groups, # use filtered and mutated dataset
@@ -369,16 +370,23 @@ cohen.d(duration_hr ~ half_of_week, # compare average sleep duration between the
 
 ```{r}
 
-ggplot(data = sleep_calendar %>% filter(half_of_week != 3),
+ggplot(data = sleep_calendar_clean |> # use sleep_calendar_clean data frame
+         filter(half_of_week != 3), # exclude weekends from visualization
        aes(x = factor(half_of_week, # convert half_of_week to categories
                       levels = c(1,2),
                       labels = c("1st Half", "2nd Half")), # add labels for x-axis
-           y = duration_hr_mm_ss,
+           y = duration_hr_mm_ss, # add labels for y-axis
            color = factor(half_of_week,
                           levels = c(1,2),
-                          labels = c("1st Half", "2nd Half"))))+ #color points by half_of_week categories
-  stat_summary(fun = mean, geom = "point", size = 4, color = "black") +
-  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2, color = "black") +
+                          labels = c("1st Half", "2nd Half")))) + # color points by half_of_week categories
+  stat_summary(fun = mean, # calculate the mean of y values for each group
+               geom = "point", # display the mean as a point on the plot
+               size = 4, # change size
+               color = "black") + # set mean color to black
+  stat_summary(fun.data = mean_cl_normal, # calculate mean and confidence limits
+               geom = "errorbar", # show as error bar
+               width = 0.2, # change width
+               color = "black") + # set errorbar color to black
  geom_jitter(width = 0.15, # change width
               size = 3, # change size of points
               alpha = 1, # alter transparency
@@ -392,8 +400,14 @@ ggplot(data = sleep_calendar %>% filter(half_of_week != 3),
     subtitle = paste("Most recent observation:", "Thursday, Mar 5, 2026"), # add subtitle
     x = "Half of the week (Mon/Tues, Wed/Thurs)", # label x axis
     y = "Sleep Duration (hours)", # label y axis
-    color = "Section of the Week" # label legand
+    color = "Section of the Week" # label legend
   ) +
   theme_light() # change theme
 ```
 # e. Write a caption
+
+Figure 1. Sleep Duration Across the First and Second Halves of the Week. This figure displays individual sleep duration measurements (in hours) for the first half of the week (Monday/Tuesday) and the second half of the week (Wednesday/Thursday). Each data point is represented by a white-filled circle with a colored outline and slight horizontal jitter to prevent overlap. Points are colored by week section: dark blue for the first half and red for the second half. Black points indicate the mean sleep duration for each half of the week, with vertical black error bars representing the 95% confidence interval around the mean. The plot uses a light theme for readability, with labeled axes and a descriptive legend indicating the section of the week.
+
+# f
+
+There was no statistically significant difference in mean sleep duration between the first half (Monday/Tuesday) and second half (Wednesday/Thursday) of the work week (Student's two sample t-test, t(21) = 0.69, p = 0.50, α = 0.05 ). The average sleep duration was higher in the first half of the week (mean = 8.25 hr) compared to the second half (mean = 7.99 hr), but this difference was small. (0.26 hrs longer, 95% CI : [-0.52, 1.03] hrs). The effect size was also small (Cohen’s d = 0.29), indicating that the practical difference in sleep duration between the two halves of the week is minimal. These results suggest that, for myself, sleep duration remains relatively consistent across the work week.

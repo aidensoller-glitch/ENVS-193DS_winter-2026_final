@@ -105,6 +105,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#figure-1.-predicted-probability-of-mountain-plover-nest-site-use-in-relation-to-visual-obstruction." id="toc-figure-1.-predicted-probability-of-mountain-plover-nest-site-use-in-relation-to-visual-obstruction." class="nav-link" data-scroll-target="#figure-1.-predicted-probability-of-mountain-plover-nest-site-use-in-relation-to-visual-obstruction.">Figure 1. Predicted probability of Mountain Plover nest site use in relation to visual obstruction.</a></li>
   <li><a href="#i.-calculate-model-predictions" id="toc-i.-calculate-model-predictions" class="nav-link" data-scroll-target="#i.-calculate-model-predictions">i. Calculate model predictions</a></li>
   <li><a href="#j.-interpret-your-results" id="toc-j.-interpret-your-results" class="nav-link" data-scroll-target="#j.-interpret-your-results">j. Interpret your results</a></li>
+  <li><a href="#problem-4.-affective-and-exploratory-visualizations" id="toc-problem-4.-affective-and-exploratory-visualizations" class="nav-link" data-scroll-target="#problem-4.-affective-and-exploratory-visualizations">Problem 4. Affective and exploratory visualizations</a></li>
+  <li><a href="#a.-comparing-visualizations" id="toc-a.-comparing-visualizations" class="nav-link" data-scroll-target="#a.-comparing-visualizations">a. Comparing visualizations</a></li>
+  <li><a href="#d.-create-a-visualization" id="toc-d.-create-a-visualization" class="nav-link" data-scroll-target="#d.-create-a-visualization">d.&nbsp;Create a visualization</a></li>
+  <li><a href="#e.-write-a-caption" id="toc-e.-write-a-caption" class="nav-link" data-scroll-target="#e.-write-a-caption">e. Write a caption</a></li>
+  <li><a href="#f" id="toc-f" class="nav-link" data-scroll-target="#f">f</a></li>
   </ul>
 </nav>
 </div>
@@ -157,9 +162,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggeffects)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>kelp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/Annual_Kelp_All_Years_20250903.csv"</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effsize)</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>mopl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>kelp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/Annual_Kelp_All_Years_20250903.csv"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>mopl <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv"</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>sleep_calendar <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../data/sleep_schedule.csv"</span>) <span class="co"># read in project data as an object called sleep_calendar</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="problem-1.-research-writing" class="level1">
 <h1>Problem 1. Research writing</h1>
@@ -206,20 +219,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"Naples"</span>, <span class="st">"Isla Vista"</span>, <span class="st">"Carpinteria"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site_name, year) <span class="sc">|&gt;</span> <span class="co"># Group by site_name and year for summarizing</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_fronds =</span> <span class="fu">mean</span>(fronds)) <span class="sc">|&gt;</span> <span class="co"># Calculate mean fronds per group</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="co"># Ungroup to remove grouping, giving data frame</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>kelp_clean <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="co"># slice 5 samples from the kelp_clean data frame </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="at">mean_fronds =</span> <span class="fu">mean</span>(fronds)) <span class="sc">|&gt;</span> <span class="co"># Calculate mean fronds per group</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="co"># Ungroup to remove grouping, giving data frame</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>kelp_clean <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="co"># slice 5 samples from the kelp_clean data frame </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
   site_name    year mean_fronds
   &lt;fct&gt;       &lt;dbl&gt;       &lt;dbl&gt;
-1 Carpinteria  2019        3.37
-2 Isla Vista   2001        6.5 
-3 Isla Vista   2019       12.1 
-4 Naples       2019        4.47
-5 Isla Vista   2011        9.63</code></pre>
+1 Naples       2017        4.74
+2 Carpinteria  2015        5.03
+3 Isla Vista   2013        9.36
+4 Naples       2024       17.5 
+5 Carpinteria  2025       12.9 </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -311,10 +323,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>c.&nbsp;Table of models</h1>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 27%">
+<col style="width: 26%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -404,7 +416,7 @@ m2  2 386.1351</code></pre>
 <section id="f.-check-the-diagnostics" class="level1">
 <h1>f.&nbsp;Check the diagnostics</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sim_res_m3 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(<span class="at">fittedModel =</span> m3) <span class="co"># # simulate residuals for the best model m3 and store as sim_res_m3 </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sim_res_m3 <span class="ot">&lt;-</span> <span class="fu">simulateResiduals</span>(<span class="at">fittedModel =</span> m3) <span class="co"># simulate residuals for the best model "m3" and store as sim_res_m3 </span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sim_res_m3) <span class="co"># create plot of residuals</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
@@ -419,8 +431,8 @@ m2  2 386.1351</code></pre>
 <h1>g. Visualize the model predictions</h1>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>predict_data_m3 <span class="ot">&lt;-</span> <span class="fu">ggpredict</span>(</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  m3,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">terms =</span> <span class="st">"vo_nest"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  m3, <span class="co"># generate predicted values from model m3</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">terms =</span> <span class="st">"vo_nest"</span> <span class="co"># for the predictor variable vo_nest</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>mopl_clean, <span class="co"># use mopl_clean dataset</span></span>
@@ -431,10 +443,10 @@ m2  2 386.1351</code></pre>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.5</span> ) <span class="sc">+</span> <span class="co"># edit point transparency</span></span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> predict_data_m3, <span class="co"># add confidence interval</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> x,</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> predicted,</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymin =</span> conf.low,</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> conf.high),</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="co"># set x to x-axis</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">y =</span> predicted, <span class="co"># set predicted values to y-axis</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymin =</span> conf.low, <span class="co"># set lower bound CI</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax =</span> conf.high), <span class="co"># set upper bound CI</span></span>
 <span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="co"># edit fill color</span></span>
 <span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> predict_data_m3, <span class="co"># add prediction line</span></span>
@@ -481,6 +493,171 @@ vo_nest | Predicted |     95% CI
 <section id="j.-interpret-your-results" class="level1">
 <h1>j. Interpret your results</h1>
 <p>Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sightlines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.</p>
+</section>
+<section id="problem-4.-affective-and-exploratory-visualizations" class="level1">
+<h1>Problem 4. Affective and exploratory visualizations</h1>
+</section>
+<section id="a.-comparing-visualizations" class="level1">
+<h1>a. Comparing visualizations</h1>
+<ol type="1">
+<li><p>The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.</p></li>
+<li><p>Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree’s shape came from.</p></li>
+<li><p>The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.</p></li>
+<li><p>Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.</p></li>
+</ol>
+<ol start="2" type="a">
+<li>Designing an analysis</li>
+</ol>
+<p>One analysis that we talked about this quarter that I could apply to answer my research: “Is there a significant difference in mean sleep duration between the first half and second half of the work week?” is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.</p>
+<p>A student’s two sample t-test is appropriate for my data because it allows me to compare a continuous response variable like sleep duration between two independent groups (the first half vs.&nbsp;the second half of the work week). I would choose a test like a student’s two sample t-test because while my sleep duration data is continuous and normal with mostly independent samples, with roughly equal variances.</p>
+<ol start="3" type="a">
+<li>Check any assumptions and run your analysis Cleaning Data:</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sleep_calendar_clean <span class="ot">&lt;-</span> sleep_calendar <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">|&gt;</span> <span class="co"># clean column names to make them lower_case_with_underscores</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(duration_hr_mm_ss, half_of_week) <span class="co"># keep only two collumns</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Assumptions: 1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.</p>
+<ol start="2" type="1">
+<li><p>Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.</p></li>
+<li><p>Data is normally distributed: Yes it is normally distributed.</p></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sleep_calendar_clean <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(half_of_week <span class="sc">!=</span> <span class="dv">3</span>) <span class="sc">|&gt;</span>  <span class="co"># use sleep_calendar data frame but exclude the weekend</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">mutate</span>(<span class="at">duration_hr =</span> <span class="fu">as.numeric</span>(duration_hr_mm_ss) <span class="sc">/</span> <span class="dv">3600</span>), <span class="co"># convert seconds to hours</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">sample =</span> duration_hr, <span class="co"># use hours for QQ plot</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> half_of_week)) <span class="sc">+</span> <span class="co"># color points by half_of_week</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> <span class="co"># add reference line in blue</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>() <span class="sc">+</span> <span class="co"># add plot points</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">factor</span>(half_of_week, <span class="co"># convert half_of_week into a categorical factor</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="co"># define the order of the categories</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Mon/Tues"</span>, <span class="st">"Wed/Thurs"</span>))) <span class="sc">+</span> <span class="co"># label panels as Mon/Tues and Wed/Thurs</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="co"># remove legend</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ENVS-193DS_winter-2026_final_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li><p>Random samples: Strictly speaking, the random sample assumption is not met because my data is tailored to a single individual and not randomly sampled from a population. However, for a personal experiment such as this the test will work, I simply cannot generalize the results to other people or populations.</p></li>
+<li><p>Equal variances: Our p-value is greater than 0.05, which means there is no statistically significant evidence that the variances are different.</p></li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(duration_hr_mm_ss <span class="sc">~</span> half_of_week, <span class="co"># run variance test between first half and second half of the week</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">data =</span> sleep_calendar_clean <span class="sc">%&gt;%</span> <span class="fu">filter</span>(half_of_week <span class="sc">!=</span> <span class="dv">3</span>)) <span class="co"># exclude weekend</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    F test to compare two variances
+
+data:  duration_hr_mm_ss by half_of_week
+F = 0.48197, num df = 10, denom df = 11, p-value = 0.2606
+alternative hypothesis: true ratio of variances is not equal to 1
+95 percent confidence interval:
+ 0.1367043 1.7663956
+sample estimates:
+ratio of variances 
+         0.4819746 </code></pre>
+</div>
+</div>
+<p>Run analysis</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(<span class="fu">as.numeric</span>(duration_hr_mm_ss) <span class="sc">~</span> half_of_week,  <span class="co"># run a two-sample t-test</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">data =</span> sleep_calendar_clean <span class="sc">%&gt;%</span> <span class="fu">filter</span>(half_of_week <span class="sc">!=</span> <span class="dv">3</span>), <span class="co"># exclude the weekend</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">var.equal =</span> <span class="cn">TRUE</span>)  <span class="co"># assume equal variances</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Two Sample t-test
+
+data:  as.numeric(duration_hr_mm_ss) by half_of_week
+t = 0.68814, df = 21, p-value = 0.4989
+alternative hypothesis: true difference in means between group 1 and group 2 is not equal to 0
+95 percent confidence interval:
+ -1859.391  3698.482
+sample estimates:
+mean in group 1 mean in group 2 
+       29694.55        28775.00 </code></pre>
+</div>
+</div>
+<p>Effect Size:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sleep_two_groups <span class="ot">&lt;-</span> sleep_calendar_clean <span class="sc">|&gt;</span>  </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(half_of_week <span class="sc">!=</span> <span class="dv">3</span>) <span class="sc">|&gt;</span> <span class="co"># exclude the weekends</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">duration_hr =</span> <span class="fu">as.numeric</span>(duration_hr_mm_ss)<span class="sc">/</span><span class="dv">3600</span>, <span class="co"># convert sleep duration from seconds to hours</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">half_of_week =</span> <span class="fu">factor</span>(half_of_week, <span class="co"># convert half_of_week into a categorical factor</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="co"># define the order of the categories</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Mon/Tues"</span>, <span class="st">"Wed/Thurs"</span>))) <span class="co"># add labels</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cohen.d</span>(duration_hr <span class="sc">~</span> half_of_week, <span class="co"># compare average sleep duration between the two half-of-week groups</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> sleep_two_groups, <span class="co"># use filtered and mutated dataset</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">pooled =</span> <span class="cn">TRUE</span>)  <span class="co"># assume equal variances, use combined SD from both groups for Cohen's d</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Cohen's d
+
+d estimate: 0.2872462 (small)
+95 percent confidence interval:
+     lower      upper 
+-0.5852903  1.1597827 </code></pre>
+</div>
+</div>
+</section>
+<section id="d.-create-a-visualization" class="level1">
+<h1>d.&nbsp;Create a visualization</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sleep_calendar_clean <span class="sc">|&gt;</span> <span class="co"># use sleep_calendar_clean data frame</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>         <span class="fu">filter</span>(half_of_week <span class="sc">!=</span> <span class="dv">3</span>), <span class="co"># exclude weekends from visualization</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(half_of_week, <span class="co"># convert half_of_week to categories</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1st Half"</span>, <span class="st">"2nd Half"</span>)), <span class="co"># add labels for x-axis</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> duration_hr_mm_ss, <span class="co"># add labels for y-axis</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="fu">factor</span>(half_of_week,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"1st Half"</span>, <span class="st">"2nd Half"</span>)))) <span class="sc">+</span> <span class="co"># color points by half_of_week categories</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="co"># calculate the mean of y values for each group</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">geom =</span> <span class="st">"point"</span>, <span class="co"># display the mean as a point on the plot</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">size =</span> <span class="dv">4</span>, <span class="co"># change size</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span> <span class="co"># set mean color to black</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> mean_cl_normal, <span class="co"># calculate mean and confidence limits</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">geom =</span> <span class="st">"errorbar"</span>, <span class="co"># show as error bar</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> <span class="fl">0.2</span>, <span class="co"># change width</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span> <span class="co"># set errorbar color to black</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="co"># change width</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">3</span>, <span class="co"># change size of points</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="dv">1</span>, <span class="co"># alter transparency</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>              <span class="at">shape =</span> <span class="dv">21</span>, <span class="co"># shape that supports fill + outline</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">stroke =</span> <span class="fl">0.8</span>, <span class="co"># thickness of black outline</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>              <span class="at">fill =</span> <span class="st">"white"</span>) <span class="sc">+</span> <span class="co"># inner fill color</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"1st Half"</span> <span class="ot">=</span> <span class="st">"darkblue"</span>,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"2nd Half"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span> <span class="co"># set custom colors by category</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sleep Duration Changes Between Parts of the Week"</span>, <span class="co"># add title</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">"Most recent observation:"</span>, <span class="st">"Thursday, Mar 5, 2026"</span>), <span class="co"># add subtitle</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Half of the week (Mon/Tues, Wed/Thurs)"</span>, <span class="co"># label x axis</span></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Sleep Duration (hours)"</span>, <span class="co"># label y axis</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Section of the Week"</span> <span class="co"># label legend</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="co"># change theme</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ENVS-193DS_winter-2026_final_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="e.-write-a-caption" class="level1">
+<h1>e. Write a caption</h1>
+<p>Figure 1. Sleep Duration Across the First and Second Halves of the Week. This figure displays individual sleep duration measurements (in hours) for the first half of the week (Monday/Tuesday) and the second half of the week (Wednesday/Thursday). Each data point is represented by a white-filled circle with a colored outline and slight horizontal jitter to prevent overlap. Points are colored by week section: dark blue for the first half and red for the second half. Black points indicate the mean sleep duration for each half of the week, with vertical black error bars representing the 95% confidence interval around the mean. The plot uses a light theme for readability, with labeled axes and a descriptive legend indicating the section of the week.</p>
+</section>
+<section id="f" class="level1">
+<h1>f</h1>
+<p>There was no statistically significant difference in mean sleep duration between the first half (Monday/Tuesday) and second half (Wednesday/Thursday) of the work week (Student’s two sample t-test, t(21) = 0.69, p = 0.50, α = 0.05 ). The average sleep duration was higher in the first half of the week (mean = 8.25 hr) compared to the second half (mean = 7.99 hr), but this difference was small. (0.26 hrs longer, 95% CI : [-0.52, 1.03] hrs). The effect size was also small (Cohen’s d = 0.29), indicating that the practical difference in sleep duration between the two halves of the week is minimal. These results suggest that, for myself, sleep duration remains relatively consistent across the work week.</p>
 </section>
 
 </main>
