@@ -111,45 +111,46 @@ That observation was excluded because the fronds value for 2000-09-22 in transec
 # c. Visualize the data
 
 ```{r}
-ggplot(kelp_clean, aes(x = year, 
-                       y = mean_fronds, 
-                       color = site_name)) +
+ggplot(kelp_clean, # use the cleaned kelp dataset
+       aes(x = year, # map year to x
+                       y = mean_fronds, # map mean_fronds to y
+                       color = site_name)) + # color point by site name
   
   geom_line(size = 1) + # line geometry
   geom_point(size = 2) + # point geometry
   
-  scale_x_continuous(
-    breaks = c(2000, 2005, 2010, 2015, 2020, 2025),
-    minor_breaks = seq(2000, 2025, 2.5)
+  scale_x_continuous( # customize the x-axis (continuous numeric axis)
+    breaks = c(2000, 2005, 2010, 2015, 2020, 2025), # major tick marks shown on the axis
+    minor_breaks = seq(2000, 2025, 2.5) # smaller tick marks every 2.5 years
   ) +
   
   scale_y_continuous(
-    breaks = c(0, 10, 20, 30, 40),
-    minor_breaks = seq(0, 40, 5)
+    breaks = c(0, 10, 20, 30, 40), # major tick marks
+    minor_breaks = seq(0, 40, 5) # smaller tick marks every 5 units
   ) +
   
-  scale_color_manual(values = c(
-    "Naples" = "darkcyan",
-    "Isla Vista" = "goldenrod",
-    "Carpinteria" = "thistle"
+  scale_color_manual(values = c(  # manually set the colors for the groups
+    "Naples" = "darkcyan", # assign 'Naples' data to dark cyan color
+    "Isla Vista" = "goldenrod", # assign 'Isla Vista' data to golden/yellow color
+    "Carpinteria" = "thistle" # assign 'Carpinteria' data to light purple color
   )) +
   
   labs(
-    title = "Sites vary in mean kelp fronds per year",
-    x = "Year",
-    y = "Mean kelp fronds per year",
-    color = "Site"
+    title = "Sites vary in mean kelp fronds per year", # add title
+    x = "Year", # label x axis
+    y = "Mean kelp fronds per year", # label y axis
+    color = "Site" # title for color grouping
   ) +
   
-  theme_minimal(base_family = "Monaco") +
+  theme_minimal(base_family = "Monaco") + # change theme to minimal and font to monaco
   
   theme(
-    plot.title = element_text(hjust = 0.5),
-    panel.border = element_blank(),
-    panel.grid.major = element_line(
+    plot.title = element_text(hjust = 0.5), # center plot title
+    panel.border = element_blank(), # remove border
+    panel.grid.major = element_line( # customize major gridlines
       color = "grey75",
       linewidth = 0.6),
-    panel.grid.minor = element_line(
+    panel.grid.minor = element_line( # customize minor gridlines
       color = "grey80",
       linewidth = 0.4)
   )
@@ -159,7 +160,7 @@ ggplot(kelp_clean, aes(x = year,
 
 The site with the most variable mean kelp fronds per year is Isla Vista, as seen through its large fluctuations ranging from 4 to 40 mean kelp fronds per year. Additionally, Isla Vista's fluctuation's are more variable year over year than both Naples and Carpinteria with large increases and decreases in the mean kelp fronds as seen in years like 2006-2008 or 2022-2023.
 
-The site with the least variable mean kelp fronds per year is Carpinteria, as seen through its comparitvely small fluctuations ranging only from 3-16 mean kelp fronds per year. While similiar, Naples ranges to 16 mean kelp fronds per year 3 times, whereas Carpinteria only ranges that high once.
+The site with the least variable mean kelp fronds per year is Carpinteria, as seen through its comparitvely small fluctuations ranging only from 3-16 mean kelp fronds per year. While similar, Naples ranges to 16 mean kelp fronds per year 3 times, whereas Carpinteria only ranges that high once.
 
 # Problem 3. Data analysis
 
@@ -169,14 +170,14 @@ In the data set 0s mean that a site within a prairie dog colony is unused and av
 
 # b. Purpose of study
 
-Visual obstruction is a continuous variable, as it represents a numeric value representing vegetation height and density using a Robel pole. As visual obstruction increases, the probability of Mountain Plover nest site use would likely decrease because the species prefers areas with short vegetation and more open ground that allow better visibility of predators such as the environment seen at prairie dog colonies. The discription of visual obstruction and the use of a Robel pole is found in the methods section, "Adult Mountain Plover Density – Data Collection,” third paragraph, whereas the justification of the decrease in probability of a nest is found in the discussion section, paragraph 4.
+Visual obstruction is a continuous variable, as it represents a numeric value representing vegetation height and density using a Robel pole. As visual obstruction increases, the probability of Mountain Plover nest site use would likely decrease because the species prefers areas with short vegetation and more open ground that allow better visibility of predators such as the environment seen at prairie dog colonies. The description of visual obstruction and the use of a Robel pole is found in the methods section, "Adult Mountain Plover Density – Data Collection,” third paragraph, whereas the justification of the decrease in probability of a nest is found in the discussion section, paragraph 4.
 
-Distance to prairie dog colony edge is a continuous variable because it represents a numeric distance from a nest site to a prairie dog colony. As the distance to prairie dog colony edge increase, the probability of Mountain Plover nest site use would decrease because prairie dog colonies provide the environment that Mountain Plovers prefer by shortening the vegation on areas with open ground. The information was found in the discussion section, paragraph 3.
+Distance to prairie dog colony edge is a continuous variable because it represents a numeric distance from a nest site to a prairie dog colony. As the distance to prairie dog colony edge increase, the probability of Mountain Plover nest site use would decrease because prairie dog colonies provide the environment that Mountain Plovers prefer by shortening the vegetation on areas with open ground. The information was found in the discussion section, paragraph 3.
 
 # c. Table of models
 
 | Model number | Visual Obstruction | Distance to Prarie Dog Colony | Model Description |
-|----|:--:|:--:|:--:|
+|------------------|:----------------:|:-----------------:|:----------------:|
 | 0 | N | N | no predictors (null model) |
 | 1 | Y | Y | all predictors (saturated model) |
 | 2 | N | Y | Distance to colony edge only |
@@ -285,7 +286,7 @@ ggpredict(m3, # use the selected logistic regression model
 
 # j. Interpret your results
 
-Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sightlines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.
+Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sight lines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.
 
 # Problem 4. Affective and exploratory visualizations
 
@@ -293,9 +294,9 @@ Figure 1 shows that the probability of Mountain Plover nest site use declines as
 
 1.  The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.
 
-2.  Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree's shape came from.
+2.  Between the exploratory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploratory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree's shape came from.
 
-3.  The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.
+3.  The first half of the week of my exploratory visualization shows sleep duration tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.
 
 4.  Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.
 
@@ -303,7 +304,7 @@ Figure 1 shows that the probability of Mountain Plover nest site use declines as
 
 b.  Designing an analysis
 
-One analysis that we talked about this quarter that I could apply to answer my research: "Is there a significant difference in mean sleep duration between the first half and second half of the work week?" is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.
+One analysis that we talked about this quarter that I could apply to answer my research: "Is there a significant difference in mean sleep duration between the first half and second half of the work week?" is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independent parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.
 
 A student's two sample t-test is appropriate for my data because it allows me to compare a continuous response variable like sleep duration between two independent groups (the first half vs. the second half of the work week). I would choose a test like a student's two sample t-test because while my sleep duration data is continuous and normal with mostly independent samples, with roughly equal variances.
 
@@ -318,7 +319,7 @@ sleep_calendar_clean <- sleep_calendar |>
 
 Assumptions: 1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.
 
-2.  Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.
+2.  Independent samples: Our predictor variable, the half of the work week, has two independent groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep duration in one group do not influence or overlap with the other group.
 
 3.  Data is normally distributed: Yes it is normally distributed.
 

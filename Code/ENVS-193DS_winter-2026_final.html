@@ -225,13 +225,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>kelp_clean <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="co"># slice 5 samples from the kelp_clean data frame </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 3
-  site_name    year mean_fronds
-  &lt;fct&gt;       &lt;dbl&gt;       &lt;dbl&gt;
-1 Carpinteria  2003      5.27  
-2 Naples       2001      0.0606
-3 Carpinteria  2008      6.03  
-4 Isla Vista   2020     25.0   
-5 Carpinteria  2024      5.67  </code></pre>
+  site_name   year mean_fronds
+  &lt;fct&gt;      &lt;dbl&gt;       &lt;dbl&gt;
+1 Isla Vista  2022       38.3 
+2 Naples      2020        7.41
+3 Naples      2005       10.2 
+4 Isla Vista  2023        3.78
+5 Isla Vista  2010        4.78</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -251,48 +251,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="c.-visualize-the-data" class="level1">
 <h1>c.&nbsp;Visualize the data</h1>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(kelp_clean, <span class="fu">aes</span>(<span class="at">x =</span> year, </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> mean_fronds, </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">color =</span> site_name)) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="co"># line geometry</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="co"># point geometry</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">2005</span>, <span class="dv">2010</span>, <span class="dv">2015</span>, <span class="dv">2020</span>, <span class="dv">2025</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">minor_breaks =</span> <span class="fu">seq</span>(<span class="dv">2000</span>, <span class="dv">2025</span>, <span class="fl">2.5</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>),</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">minor_breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">5</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Naples"</span> <span class="ot">=</span> <span class="st">"darkcyan"</span>,</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Isla Vista"</span> <span class="ot">=</span> <span class="st">"goldenrod"</span>,</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Carpinteria"</span> <span class="ot">=</span> <span class="st">"thistle"</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sites vary in mean kelp fronds per year"</span>,</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean kelp fronds per year"</span>,</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Site"</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">"Monaco"</span>) <span class="sc">+</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"grey75"</span>,</span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">0.6</span>),</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_line</span>(</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"grey80"</span>,</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">0.4</span>)</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(kelp_clean, <span class="co"># use the cleaned kelp dataset</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="co"># map year to x</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> mean_fronds, <span class="co"># map mean_fronds to y</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">color =</span> site_name)) <span class="sc">+</span> <span class="co"># color point by site name</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="co"># line geometry</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span> <span class="co"># point geometry</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>( <span class="co"># customize the x-axis (continuous numeric axis)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">2000</span>, <span class="dv">2005</span>, <span class="dv">2010</span>, <span class="dv">2015</span>, <span class="dv">2020</span>, <span class="dv">2025</span>), <span class="co"># major tick marks shown on the axis</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">minor_breaks =</span> <span class="fu">seq</span>(<span class="dv">2000</span>, <span class="dv">2025</span>, <span class="fl">2.5</span>) <span class="co"># smaller tick marks every 2.5 years</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>), <span class="co"># major tick marks</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">minor_breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">5</span>) <span class="co"># smaller tick marks every 5 units</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(  <span class="co"># manually set the colors for the groups</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Naples"</span> <span class="ot">=</span> <span class="st">"darkcyan"</span>, <span class="co"># assign 'Naples' data to dark cyan color</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Isla Vista"</span> <span class="ot">=</span> <span class="st">"goldenrod"</span>, <span class="co"># assign 'Isla Vista' data to golden/yellow color</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Carpinteria"</span> <span class="ot">=</span> <span class="st">"thistle"</span> <span class="co"># assign 'Carpinteria' data to light purple color</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">+</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Sites vary in mean kelp fronds per year"</span>, <span class="co"># add title</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>, <span class="co"># label x axis</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Mean kelp fronds per year"</span>, <span class="co"># label y axis</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Site"</span> <span class="co"># title for color grouping</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_family =</span> <span class="st">"Monaco"</span>) <span class="sc">+</span> <span class="co"># change theme to minimal and font to monaco</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>), <span class="co"># center plot title</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(), <span class="co"># remove border</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>( <span class="co"># customize major gridlines</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"grey75"</span>,</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">0.6</span>),</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_line</span>( <span class="co"># customize minor gridlines</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"grey80"</span>,</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">linewidth =</span> <span class="fl">0.4</span>)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -305,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="d.-interpretation-1" class="level1">
 <h1>d.&nbsp;Interpretation</h1>
 <p>The site with the most variable mean kelp fronds per year is Isla Vista, as seen through its large fluctuations ranging from 4 to 40 mean kelp fronds per year. Additionally, Isla Vista’s fluctuation’s are more variable year over year than both Naples and Carpinteria with large increases and decreases in the mean kelp fronds as seen in years like 2006-2008 or 2022-2023.</p>
-<p>The site with the least variable mean kelp fronds per year is Carpinteria, as seen through its comparitvely small fluctuations ranging only from 3-16 mean kelp fronds per year. While similiar, Naples ranges to 16 mean kelp fronds per year 3 times, whereas Carpinteria only ranges that high once.</p>
+<p>The site with the least variable mean kelp fronds per year is Carpinteria, as seen through its comparitvely small fluctuations ranging only from 3-16 mean kelp fronds per year. While similar, Naples ranges to 16 mean kelp fronds per year 3 times, whereas Carpinteria only ranges that high once.</p>
 </section>
 <section id="problem-3.-data-analysis" class="level1">
 <h1>Problem 3. Data analysis</h1>
@@ -316,17 +317,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="b.-purpose-of-study" class="level1">
 <h1>b. Purpose of study</h1>
-<p>Visual obstruction is a continuous variable, as it represents a numeric value representing vegetation height and density using a Robel pole. As visual obstruction increases, the probability of Mountain Plover nest site use would likely decrease because the species prefers areas with short vegetation and more open ground that allow better visibility of predators such as the environment seen at prairie dog colonies. The discription of visual obstruction and the use of a Robel pole is found in the methods section, “Adult Mountain Plover Density – Data Collection,” third paragraph, whereas the justification of the decrease in probability of a nest is found in the discussion section, paragraph 4.</p>
-<p>Distance to prairie dog colony edge is a continuous variable because it represents a numeric distance from a nest site to a prairie dog colony. As the distance to prairie dog colony edge increase, the probability of Mountain Plover nest site use would decrease because prairie dog colonies provide the environment that Mountain Plovers prefer by shortening the vegation on areas with open ground. The information was found in the discussion section, paragraph 3.</p>
+<p>Visual obstruction is a continuous variable, as it represents a numeric value representing vegetation height and density using a Robel pole. As visual obstruction increases, the probability of Mountain Plover nest site use would likely decrease because the species prefers areas with short vegetation and more open ground that allow better visibility of predators such as the environment seen at prairie dog colonies. The description of visual obstruction and the use of a Robel pole is found in the methods section, “Adult Mountain Plover Density – Data Collection,” third paragraph, whereas the justification of the decrease in probability of a nest is found in the discussion section, paragraph 4.</p>
+<p>Distance to prairie dog colony edge is a continuous variable because it represents a numeric distance from a nest site to a prairie dog colony. As the distance to prairie dog colony edge increase, the probability of Mountain Plover nest site use would decrease because prairie dog colonies provide the environment that Mountain Plovers prefer by shortening the vegetation on areas with open ground. The information was found in the discussion section, paragraph 3.</p>
 </section>
 <section id="c.-table-of-models" class="level1">
 <h1>c.&nbsp;Table of models</h1>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
+<col style="width: 24%">
+<col style="width: 24%">
+<col style="width: 26%">
+<col style="width: 24%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -492,7 +493,7 @@ vo_nest | Predicted |     95% CI
 </section>
 <section id="j.-interpret-your-results" class="level1">
 <h1>j. Interpret your results</h1>
-<p>Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sightlines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.</p>
+<p>Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sight lines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.</p>
 </section>
 <section id="problem-4.-affective-and-exploratory-visualizations" class="level1">
 <h1>Problem 4. Affective and exploratory visualizations</h1>
@@ -501,15 +502,15 @@ vo_nest | Predicted |     95% CI
 <h1>a. Comparing visualizations</h1>
 <ol type="1">
 <li><p>The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.</p></li>
-<li><p>Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree’s shape came from.</p></li>
-<li><p>The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.</p></li>
+<li><p>Between the exploratory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploratory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree’s shape came from.</p></li>
+<li><p>The first half of the week of my exploratory visualization shows sleep duration tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.</p></li>
 <li><p>Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.</p></li>
 </ol>
 <!-- -->
 <ol start="2" type="a">
 <li>Designing an analysis</li>
 </ol>
-<p>One analysis that we talked about this quarter that I could apply to answer my research: “Is there a significant difference in mean sleep duration between the first half and second half of the work week?” is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.</p>
+<p>One analysis that we talked about this quarter that I could apply to answer my research: “Is there a significant difference in mean sleep duration between the first half and second half of the work week?” is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independent parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.</p>
 <p>A student’s two sample t-test is appropriate for my data because it allows me to compare a continuous response variable like sleep duration between two independent groups (the first half vs.&nbsp;the second half of the work week). I would choose a test like a student’s two sample t-test because while my sleep duration data is continuous and normal with mostly independent samples, with roughly equal variances.</p>
 <ol start="3" type="a">
 <li>Check any assumptions and run your analysis Cleaning Data:</li>
@@ -521,7 +522,7 @@ vo_nest | Predicted |     95% CI
 </div>
 <p>Assumptions: 1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.</p>
 <ol start="2" type="1">
-<li><p>Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.</p></li>
+<li><p>Independent samples: Our predictor variable, the half of the work week, has two independent groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep duration in one group do not influence or overlap with the other group.</p></li>
 <li><p>Data is normally distributed: Yes it is normally distributed.</p></li>
 </ol>
 <div class="cell">
