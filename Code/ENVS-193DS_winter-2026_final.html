@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#a.-comparing-visualizations" id="toc-a.-comparing-visualizations" class="nav-link" data-scroll-target="#a.-comparing-visualizations">a. Comparing visualizations</a></li>
   <li><a href="#d.-create-a-visualization" id="toc-d.-create-a-visualization" class="nav-link" data-scroll-target="#d.-create-a-visualization">d.&nbsp;Create a visualization</a></li>
   <li><a href="#e.-write-a-caption" id="toc-e.-write-a-caption" class="nav-link" data-scroll-target="#e.-write-a-caption">e. Write a caption</a></li>
-  <li><a href="#f" id="toc-f" class="nav-link" data-scroll-target="#f">f</a></li>
+  <li><a href="#f.-write-about-your-results" id="toc-f.-write-about-your-results" class="nav-link" data-scroll-target="#f.-write-about-your-results">f.&nbsp;Write about your results</a></li>
   </ul>
 </nav>
 </div>
@@ -227,11 +227,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 5 × 3
   site_name    year mean_fronds
   &lt;fct&gt;       &lt;dbl&gt;       &lt;dbl&gt;
-1 Naples       2017        4.74
-2 Carpinteria  2015        5.03
-3 Isla Vista   2013        9.36
-4 Naples       2024       17.5 
-5 Carpinteria  2025       12.9 </code></pre>
+1 Carpinteria  2003      5.27  
+2 Naples       2001      0.0606
+3 Carpinteria  2008      6.03  
+4 Isla Vista   2020     25.0   
+5 Carpinteria  2024      5.67  </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -323,10 +323,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>c.&nbsp;Table of models</h1>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 23%">
-<col style="width: 23%">
-<col style="width: 27%">
-<col style="width: 26%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
 </colgroup>
 <thead>
 <tr class="header">
@@ -505,6 +505,7 @@ vo_nest | Predicted |     95% CI
 <li><p>The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.</p></li>
 <li><p>Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.</p></li>
 </ol>
+<!-- -->
 <ol start="2" type="a">
 <li>Designing an analysis</li>
 </ol>
@@ -655,8 +656,8 @@ d estimate: 0.2872462 (small)
 <h1>e. Write a caption</h1>
 <p>Figure 1. Sleep Duration Across the First and Second Halves of the Week. This figure displays individual sleep duration measurements (in hours) for the first half of the week (Monday/Tuesday) and the second half of the week (Wednesday/Thursday). Each data point is represented by a white-filled circle with a colored outline and slight horizontal jitter to prevent overlap. Points are colored by week section: dark blue for the first half and red for the second half. Black points indicate the mean sleep duration for each half of the week, with vertical black error bars representing the 95% confidence interval around the mean. The plot uses a light theme for readability, with labeled axes and a descriptive legend indicating the section of the week.</p>
 </section>
-<section id="f" class="level1">
-<h1>f</h1>
+<section id="f.-write-about-your-results" class="level1">
+<h1>f.&nbsp;Write about your results</h1>
 <p>There was no statistically significant difference in mean sleep duration between the first half (Monday/Tuesday) and second half (Wednesday/Thursday) of the work week (Student’s two sample t-test, t(21) = 0.69, p = 0.50, α = 0.05 ). The average sleep duration was higher in the first half of the week (mean = 8.25 hr) compared to the second half (mean = 7.99 hr), but this difference was small. (0.26 hrs longer, 95% CI : [-0.52, 1.03] hrs). The effect size was also small (Cohen’s d = 0.29), indicating that the practical difference in sleep duration between the two halves of the week is minimal. These results suggest that, for myself, sleep duration remains relatively consistent across the work week.</p>
 </section>
 

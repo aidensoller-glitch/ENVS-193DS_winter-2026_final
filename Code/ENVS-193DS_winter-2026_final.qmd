@@ -176,7 +176,7 @@ Distance to prairie dog colony edge is a continuous variable because it represen
 # c. Table of models
 
 | Model number | Visual Obstruction | Distance to Prarie Dog Colony | Model Description |
-|-----------------|:---------------:|:------------------:|:-----------------:|
+|----|:--:|:--:|:--:|
 | 0 | N | N | no predictors (null model) |
 | 1 | Y | Y | all predictors (saturated model) |
 | 2 | N | Y | Distance to colony edge only |
@@ -291,22 +291,23 @@ Figure 1 shows that the probability of Mountain Plover nest site use declines as
 
 # a. Comparing visualizations
 
-1. The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.
+1.  The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.
 
-2. Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree's shape came from.
+2.  Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree's shape came from.
 
-3. The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.
+3.  The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.
 
-4. Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.
+4.  Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.
 
-b. Designing an analysis
+<!-- -->
 
-One analysis that we talked about this quarter that I could apply to answer my research: "Is there a significant difference in mean sleep duration between the first half and second half of the work week?" is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable. 
+b.  Designing an analysis
+
+One analysis that we talked about this quarter that I could apply to answer my research: "Is there a significant difference in mean sleep duration between the first half and second half of the work week?" is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable.
 
 A student's two sample t-test is appropriate for my data because it allows me to compare a continuous response variable like sleep duration between two independent groups (the first half vs. the second half of the work week). I would choose a test like a student's two sample t-test because while my sleep duration data is continuous and normal with mostly independent samples, with roughly equal variances.
 
-c. Check any assumptions and run your analysis
-Cleaning Data:
+c.  Check any assumptions and run your analysis Cleaning Data:
 
 ```{r}
 sleep_calendar_clean <- sleep_calendar |> 
@@ -315,12 +316,11 @@ sleep_calendar_clean <- sleep_calendar |>
 
 ```
 
-Assumptions:
-1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.
+Assumptions: 1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.
 
-2. Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.
+2.  Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.
 
-3. Data is normally distributed: Yes it is normally distributed.
+3.  Data is normally distributed: Yes it is normally distributed.
 
 ```{r}
 ggplot(data = sleep_calendar_clean |> 
@@ -336,9 +336,9 @@ ggplot(data = sleep_calendar_clean |>
   theme(legend.position = "none") # remove legend
 ```
 
-4. Random samples: Strictly speaking, the random sample assumption is not met because my data is tailored to a single individual and not randomly sampled from a population. However, for a personal experiment such as this the test will work, I simply cannot generalize the results to other people or populations.
+4.  Random samples: Strictly speaking, the random sample assumption is not met because my data is tailored to a single individual and not randomly sampled from a population. However, for a personal experiment such as this the test will work, I simply cannot generalize the results to other people or populations.
 
-5. Equal variances: Our p-value is greater than 0.05, which means there is no statistically significant evidence that the variances are different.
+5.  Equal variances: Our p-value is greater than 0.05, which means there is no statistically significant evidence that the variances are different.
 
 ```{r}
 var.test(duration_hr_mm_ss ~ half_of_week, # run variance test between first half and second half of the week
@@ -352,6 +352,7 @@ t.test(as.numeric(duration_hr_mm_ss) ~ half_of_week,  # run a two-sample t-test
        data = sleep_calendar_clean %>% filter(half_of_week != 3), # exclude the weekend
        var.equal = TRUE)  # assume equal variances
 ```
+
 Effect Size:
 
 ```{r}
@@ -366,6 +367,7 @@ cohen.d(duration_hr ~ half_of_week, # compare average sleep duration between the
         data = sleep_two_groups, # use filtered and mutated dataset
         pooled = TRUE)  # assume equal variances, use combined SD from both groups for Cohen's d
 ```
+
 # d. Create a visualization
 
 ```{r}
@@ -404,10 +406,11 @@ ggplot(data = sleep_calendar_clean |> # use sleep_calendar_clean data frame
   ) +
   theme_light() # change theme
 ```
+
 # e. Write a caption
 
 Figure 1. Sleep Duration Across the First and Second Halves of the Week. This figure displays individual sleep duration measurements (in hours) for the first half of the week (Monday/Tuesday) and the second half of the week (Wednesday/Thursday). Each data point is represented by a white-filled circle with a colored outline and slight horizontal jitter to prevent overlap. Points are colored by week section: dark blue for the first half and red for the second half. Black points indicate the mean sleep duration for each half of the week, with vertical black error bars representing the 95% confidence interval around the mean. The plot uses a light theme for readability, with labeled axes and a descriptive legend indicating the section of the week.
 
-# f
+# f. Write about your results
 
-There was no statistically significant difference in mean sleep duration between the first half (Monday/Tuesday) and second half (Wednesday/Thursday) of the work week (Student's two sample t-test, t(21) = 0.69, p = 0.50, α = 0.05 ). The average sleep duration was higher in the first half of the week (mean = 8.25 hr) compared to the second half (mean = 7.99 hr), but this difference was small. (0.26 hrs longer, 95% CI : [-0.52, 1.03] hrs). The effect size was also small (Cohen’s d = 0.29), indicating that the practical difference in sleep duration between the two halves of the week is minimal. These results suggest that, for myself, sleep duration remains relatively consistent across the work week.
+There was no statistically significant difference in mean sleep duration between the first half (Monday/Tuesday) and second half (Wednesday/Thursday) of the work week (Student's two sample t-test, t(21) = 0.69, p = 0.50, α = 0.05 ). The average sleep duration was higher in the first half of the week (mean = 8.25 hr) compared to the second half (mean = 7.99 hr), but this difference was small. (0.26 hrs longer, 95% CI : \[-0.52, 1.03\] hrs). The effect size was also small (Cohen’s d = 0.29), indicating that the practical difference in sleep duration between the two halves of the week is minimal. These results suggest that, for myself, sleep duration remains relatively consistent across the work week.
