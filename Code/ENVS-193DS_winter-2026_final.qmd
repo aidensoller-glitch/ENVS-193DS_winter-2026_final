@@ -34,9 +34,16 @@ library(DHARMa)
 
 library(ggeffects)
 
-kelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
+library(effsize)
+
+library(ggplot2)
+
+library(Hmisc)
+tekelp <- read_csv("../Data/Annual_Kelp_All_Years_20250903.csv")
 
 mopl <- read_csv("../DATA/MOPL_nest-site_selection_Duchardt_et_al._2019.csv")
+
+sleep_calendar <- read_csv("../data/sleep_schedule.csv") # read in project data as an object called sleep_calendar
 ```
 
 # Problem 1. Research writing
@@ -169,7 +176,7 @@ Distance to prairie dog colony edge is a continuous variable because it represen
 # c. Table of models
 
 | Model number | Visual Obstruction | Distance to Prarie Dog Colony | Model Description |
-|----|:--:|:--:|:--:|
+|-----------------|:---------------:|:------------------:|:-----------------:|
 | 0 | N | N | no predictors (null model) |
 | 1 | Y | Y | all predictors (saturated model) |
 | 2 | N | Y | Distance to colony edge only |
@@ -279,3 +286,114 @@ ggpredict(m3, # use the selected logistic regression model
 # j. Interpret your results
 
 Figure 1 shows that the probability of Mountain Plover nest site use declines as visual obstruction increases, indicating that plovers prefer areas with more open ground. There is a clear negative relationship between vegetation height and the likelihood that a site will be used for nesting. When visual obstruction is zero, the predicted probability of a site being used for nesting is about 0.73. This pattern likely reflects the plovers’ need for unobstructed sightlines to detect predators and monitor their surroundings. Additionally, open areas may provide easier access to food and safer conditions for raising chicks, making sites with taller or denser vegetation less suitable for nesting.
+
+# Problem 4. Affective and exploratory visualizations
+
+# a. Comparing visualizations
+
+1. The exploratory visualizations I made represent the data in a standard, quantitative way using axes, scales, and precise numeric values, making it easy to identify exact relationships and patterns between variables. In contrast, my affective visualization (the tree) represents the data more metaphorically, using shape like branch length and what side of the tree to evoke an intuitive, emotional understanding of sleep patterns rather than precise measurements.
+
+2. Between the exploritory and affective visualizations, there is simularities between the groupings of the data. Due to the way the affective visualization was created, it was easy to see the groupings of points seen in my exploritory data in the branches. As a result, you can visualize the shape of the tree when looking at the plots and see where the tree's shape came from.
+
+3. The first half of the week of my exploritory visualization shows sleep durations tightly clustered around 8–8.5 hours, while the second half has a wider range with more variability above and below that range. This same pattern appears in the affective visualization, where the left side of the tree is more uniform and the right side has more irregular, uneven branches. These patterns are consistent across visualizations because they represent the same underlying data, but the scatterplot shows variability quantitatively while the affective visualization shows it more intuitively through shape.
+
+4. Some feedback that I got on my visualization is to reduce the amount of variables I represent in my visualization. Originally I intended to represent my resting heart rate for the data through leaf color, changing the shade to indicate increased heart rate. I ended up taking the feedback and focusing on just sleep duration and the half of the week, as I felt that while heart rate might impact duration I wanted to focus on the story of how weekly activities impact sleep.
+
+b. Designing an analysis
+
+One analysis that we talked about this quarter that I could apply to answer my research: "Is there a significant difference in mean sleep duration between the first half and second half of the work week?" is a students two sample t-test. This analysis is appropriate with regard to my variables because in my study I address two variables, the half of the work week and sleep duration. The half of the work week is my predictor variable, which is a categorical variable split into two independant parts; the first half of the week and the second half of the week. Comparatively my response variable, Sleep duration (hrs), is a continuous variable. 
+
+A student's two sample t-test is appropriate for my data because it allows me to compare a continuous response variable like sleep duration between two independent groups (the first half vs. the second half of the work week). I would choose a test like a student's two sample t-test because while my sleep duration data is continuous and normal with mostly independent samples, with roughly equal variances.
+
+c. Check any assumptions and run your analysis
+Cleaning Data:
+
+```{r}
+sleep_calendar_clean <- sleep_calendar |> 
+  clean_names() |> 
+  select(duration_hr_mm_ss, half_of_week)
+
+```
+
+Assumptions:
+1. Continuous variable: Our response variable, sleep duration, is continuous because it’s measured in hours and can take any numeric value, not just fixed categories.
+
+2. Independent samples: Our predictor variable, the half of the work week, has two independant groups because each night’s sleep measurement belongs to either the first half of the week (Monday/Tuesday) or the second half (Wednesday/Thursday), but not both. No single observation appears in both groups, so the sleep durations in one group do not influence or overlap with the other group.
+
+3. Data is normally distributed: Yes it is normally distributed.
+
+```{r}
+ggplot(data = sleep_calendar_clean |> 
+         filter(half_of_week != 3) |>  # use sleep_calendar data frame but exclude the weekend
+       mutate(duration_hr = as.numeric(duration_hr_mm_ss) / 3600), # convert seconds to hours
+       aes(sample = duration_hr, # use numeric hours for QQ plot
+           color = half_of_week)) + # color points by half_of_week
+  geom_qq_line(color = "blue") + # add reference line in blue
+  geom_qq() + # add actual QQ plot points
+  facet_wrap(~ factor(half_of_week, 
+                      levels = c(1,2), 
+                      labels = c("Mon/Tues", "Wed/Thurs"))) + # label panels as Mon/Tues and Wed/Thurs
+  theme(legend.position = "none") # remove legend
+```
+
+4. Random samples: Strictly speaking, the random sample assumption is not met because my data is tailored to a single individual and not randomly sampled from a population. However, for a personal experiment such as this the test will work, I simply cannot generalize the results to other people or populations.
+
+5. Equal variances: Our p-value is greater than 0.05, which means there is no statistically significant evidence that the variances are different.
+
+```{r}
+var.test(duration_hr_mm_ss ~ half_of_week, # run variance test between first half and second half of the week
+         data = sleep_calendar_clean %>% filter(half_of_week != 3)) # exclude half 3
+```
+
+Run analysis
+
+```{r}
+t.test(as.numeric(duration_hr_mm_ss) ~ half_of_week,  # run a two-sample t-test
+       data = sleep_calendar_clean %>% filter(half_of_week != 3), # exclude the weekend
+       var.equal = TRUE)  # assume equal variances based on F-test
+```
+Effect Size:
+
+```{r}
+sleep_two_groups <- sleep_calendar_clean |>  
+  filter(half_of_week != 3) |> # keep only first half (1 = Mon/Tues) and second half (2 = Wed/Thurs)
+  mutate(duration_hr = as.numeric(duration_hr_mm_ss)/3600,  # convert hms object to numeric hours
+         half_of_week = factor(half_of_week, levels = c(1,2),  # convert grouping variable to factor
+                               labels = c("Mon/Tues", "Wed/Thurs")))  
+
+cohen.d(duration_hr ~ half_of_week, # compare average sleep duration between the two half-of-week groups
+        data = sleep_two_groups, # use filtered and mutated dataset
+        pooled = TRUE)  # assume equal variances, use combined SD from both groups for Cohen's d
+```
+# d. Create a visualization
+
+```{r}
+
+ggplot(data = sleep_calendar %>% filter(half_of_week != 3),
+       aes(x = factor(half_of_week, # convert half_of_week to categories
+                      levels = c(1,2),
+                      labels = c("1st Half", "2nd Half")), # add labels for x-axis
+           y = duration_hr_mm_ss,
+           color = factor(half_of_week,
+                          levels = c(1,2),
+                          labels = c("1st Half", "2nd Half"))))+ #color points by half_of_week categories
+  stat_summary(fun = mean, geom = "point", size = 4, color = "black") +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2, color = "black") +
+ geom_jitter(width = 0.15, # change width
+              size = 3, # change size of points
+              alpha = 1, # alter transparency
+              shape = 21, # shape that supports fill + outline
+              stroke = 0.8, # thickness of black outline
+              fill = "white") + # inner fill color
+  scale_color_manual(values = c("1st Half" = "darkblue",
+                                "2nd Half" = "red")) + # set custom colors by category
+  labs(
+    title = "Sleep Duration Changes Between Parts of the Week", # add title
+    subtitle = paste("Most recent observation:", "Thursday, Mar 5, 2026"), # add subtitle
+    x = "Half of the week (Mon/Tues, Wed/Thurs)", # label x axis
+    y = "Sleep Duration (hours)", # label y axis
+    color = "Section of the Week" # label legand
+  ) +
+  theme_light() # change theme
+```
+# e. Write a caption
